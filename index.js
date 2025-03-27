@@ -21,6 +21,7 @@ app.get('/update-cobj', async (req, res) => {
     const id = req.query.id;
     console.log("id", id)
     const lostSocks = `https://api.hubspot.com/crm/v3/objects/p_lost_socks?properties=name,sock_color,time_lost,sock_pair_status`;
+
     console.log("lostSocks", lostSocks)
 
     const headers = {
@@ -69,8 +70,11 @@ app.post('/update-cobj', async (req, res) => {
         }
     }
 
-    const id = req.query.id;
-    const updatelostSocks = `https://api.hubspot.com/crm/v3/objects/p_lost_socks/${id}?properties=name,sock_color,time_lost,sock_pair_status&idProperty=hs_object_id`;
+    const id = req.body.sockid; // TODO: Create ID in case it is undefined
+    console.log("id", id)
+    const updatelostSocks = `https://api.hubspot.com/crm/v3/objects/p_lost_socks/${id}`;
+   //const updatelostSocks = `https://api.hubspot.com/crm/v3/objects/p_lost_socks/${id}?properties=name,sock_color,time_lost,sock_pair_status&idProperty=hs_object_id`;
+
 
     // `https://api.hubapi.com/crm/v3/objects/contacts/${email}?idProperty=email`;
     const headers = {
