@@ -13,13 +13,36 @@ const PRIVATE_APP_ACCESS = process.env.MY_HUBSPOT_ACCESS_TOKEN;
 
 // TODO: ROUTE 1 - Create a new app.get route for the homepage to call your custom object data. Pass this data along to the front-end and create a new pug template in the views folder.
 
-// * Code for Route 1 goes here
+app.get('/', async (req, res) => {
+   
+    const lostSocks = `https://api.hubspot.com/crm/v3/objects/p_lost_socks?properties=name,sock_color,time_lost,sock_pair_status`;
+
+    console.log("lostSocks", lostSocks)
+
+    const headers = {
+        Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
+        'Content-Type': 'application/json'
+    }
+    try {
+        const resp = await axios.get(lostSocks, { headers });
+        const data = resp.data.results;
+      
+        console.log("data", JSON.stringify(data))
+   
+        res.render('homepage', { title: 'Homepage | Integrating With HubSpot I Practicum', data});      
+    } catch (error) {
+        console.error(error);
+    }
+});
 
 // TODO: ROUTE 2 - Create a new app.get route for the form to create or update new custom object data. Send this data along in the next route.
 
 app.get('/update-cobj', async (req, res) => {
     const id = req.query.id;
+    const neworedit = id ? "edit" : "new";
     console.log("id", id)
+    console.log("neworedit", neworedit)
+
     const lostSocks = `https://api.hubspot.com/crm/v3/objects/p_lost_socks?properties=name,sock_color,time_lost,sock_pair_status`;
 
     console.log("lostSocks", lostSocks)
@@ -32,6 +55,8 @@ app.get('/update-cobj', async (req, res) => {
         const resp = await axios.get(lostSocks, { headers });
         const data = resp.data.results;
         data.id = id;
+        data.neworedit = neworedit;
+
         console.log("data", JSON.stringify(data))
         console.log("PRIVATE_APP_ACCESS", PRIVATE_APP_ACCESS)
         res.render('updates', { title: 'Update Custom Object Form | Integrating With HubSpot I Practicum', data});      
@@ -71,8 +96,14 @@ app.post('/update-cobj', async (req, res) => {
     }
 
     const id = req.body.sockid; // TODO: Create ID in case it is undefined
+    const neworedit = req.body.neworedit;
     console.log("id", id)
-    const updatelostSocks = `https://api.hubspot.com/crm/v3/objects/p_lost_socks/${id}`;
+    console.log("neworedit", neworedit)
+
+   
+    let updatelostSocks = `https://api.hubspot.com/crm/v3/objects/p_lost_socks`;
+    if(neworedit === "edit") 
+        updatelostSocks += `/${id}`;
    //const updatelostSocks = `https://api.hubspot.com/crm/v3/objects/p_lost_socks/${id}?properties=name,sock_color,time_lost,sock_pair_status&idProperty=hs_object_id`;
 
 
@@ -83,7 +114,13 @@ app.post('/update-cobj', async (req, res) => {
     };
 
     try { 
-        await axios.patch(updatelostSocks, update, { headers } );
+        if(neworedit === "new") {
+            await axios.post(updatelostSocks, update, { headers } );
+        }
+        else {
+            await axios.patch(updatelostSocks, update, { headers } );
+        }
+
         res.redirect('back');
     } catch(err) {
         console.error(err);

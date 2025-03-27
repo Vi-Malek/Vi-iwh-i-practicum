@@ -1,0 +1,25 @@
+doctype html
+html 
+    head 
+        title= `${title}`
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        link(rel="stylesheet", href="/css/style.css")
+    body    
+        h1 Lost Socks Homepage
+        a(href="/update-cobj") Add to this table
+
+        table.lostsockstable 
+            tr 
+                th Name 
+                th Sock Color 
+                th Time Lost 
+                th Sock Pair Status
+                th Edit 
+            each lostSock in data
+                tr 
+                    td #{lostSock.properties.name}
+                    td #{lostSock.properties.sock_color}
+                    td #{lostSock.properties.time_lost}
+                    td #{lostSock.properties.sock_pair_status}
+                    td 
+                        a.editbutton(href=`/update-cobj?id=${lostSock.properties.hs_object_id}`) Edit
