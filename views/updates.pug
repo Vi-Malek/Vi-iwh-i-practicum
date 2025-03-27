@@ -10,11 +10,28 @@ html
     body    
         h1 Lost Socks
         a(href="/") Return to Home
-        .cards 
-            each lostSock in data
-                if lostSock.properties.hs_object_id === data.id 
-                    .card 
-                        h2.card__name #{lostSock.properties.name}  
-                        p.card__email Sock Color: #{lostSock.properties.sock_color}
-                        p.card__email Time Lost: #{lostSock.properties.time_lost}
-                        p.card__email Sock Pair Status: #{lostSock.properties.sock_pair_status}
+        //- .cards 
+        //-     each lostSock in data
+        //-         if lostSock.properties.hs_object_id === data.id 
+        //-             .card 
+        //-                 h2.card__name #{lostSock.properties.name}  
+        //-                 p.card__email Sock Color: #{lostSock.properties.sock_color}
+        //-                 p.card__email Time Lost: #{lostSock.properties.time_lost}
+        //-                 p.card__email Sock Pair Status: #{lostSock.properties.sock_pair_status}
+
+
+        form(action="/update-cobj" method="post") 
+            .form-group 
+                label(for="name") Name:
+                input#name(type="text" name="name" required) 
+            .form-group 
+                label(for="sock_color") Sock Color: 
+                input#sock_color(type="text" name="sock_color" required) 
+            .form-group 
+                label(for="time_lost") Time lost: 
+                input#time_lost(type="text" name="time_lost" required) 
+            .form-group
+                label(for="sock_pair_status") Sock Pair Status: 
+                input#sock_pair_status(type="text" name="sock_pair_status" required) 
+            
+            button(type="submit") Submit 
