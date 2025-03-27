@@ -18,7 +18,11 @@ const PRIVATE_APP_ACCESS = process.env.MY_HUBSPOT_ACCESS_TOKEN;
 // TODO: ROUTE 2 - Create a new app.get route for the form to create or update new custom object data. Send this data along in the next route.
 
 app.get('/update-cobj', async (req, res) => {
-    const lostSocks = 'https://api.hubspot.com/crm/v3/objects/p_lost_socks?properties=name,sock_color,time_lost,sock_pair_status';
+    const id = req.query.id;
+    console.log("id", id)
+    const lostSocks = `https://api.hubspot.com/crm/v3/objects/p_lost_socks?properties=name,sock_color,time_lost,sock_pair_status`;
+    console.log("lostSocks", lostSocks)
+
     const headers = {
         Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
         'Content-Type': 'application/json'
@@ -26,9 +30,10 @@ app.get('/update-cobj', async (req, res) => {
     try {
         const resp = await axios.get(lostSocks, { headers });
         const data = resp.data.results;
+        data.id = id;
         console.log("data", JSON.stringify(data))
         console.log("PRIVATE_APP_ACCESS", PRIVATE_APP_ACCESS)
-        res.render('updates', { title: 'Update Custom Object Form | Integrating With HubSpot I Practicum', data });      
+        res.render('updates', { title: 'Update Custom Object Form | Integrating With HubSpot I Practicum', data});      
     } catch (error) {
         console.error(error);
     }

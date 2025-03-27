@@ -11,9 +11,10 @@ html
         h1 Lost Socks
         a(href="/") Return to Home
         .cards 
-            each lostSocks in data
-                .card 
-                    h2.card__name #{lostSocks.properties.name}  
-                    p.card__email Sock Color: #{lostSocks.properties.sock_color}
-                    p.card__email Time Lost: #{lostSocks.properties.time_lost}
-                    p.card__email Sock Pair Status: #{lostSocks.properties.sock_pair_status}
+            each lostSock in data
+                if lostSock.properties.hs_object_id === data.id 
+                    .card 
+                        h2.card__name #{lostSock.properties.name}  
+                        p.card__email Sock Color: #{lostSock.properties.sock_color}
+                        p.card__email Time Lost: #{lostSock.properties.time_lost}
+                        p.card__email Sock Pair Status: #{lostSock.properties.sock_pair_status}
